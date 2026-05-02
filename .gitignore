@@ -1,9 +1,14 @@
 .idea/
 
 FlightForgePlugin/Binaries
+
 FlightForgePlugin/Intermediate
 
-UINav3Plugin_5.4/Binaries/
-UINav3Plugin_5.4/Intermediate/
+**/.vs/
+**/Binaries/
+**/Intermediate/
+**/DerivedDataCache/
+**/Saved/
+**/Build/
 
 .idea/

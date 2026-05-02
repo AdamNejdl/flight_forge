@@ -23,8 +23,7 @@ bool DroneServer::Route(const FTCPClient &Client, std::shared_ptr<std::stringstr
 		Serialization::SerializeRequest<Serializable::Drone::GetLocation::Request>(CustomRequest, *InputStream);
 
 		//testing new function
-		// GetAllSensors(Client);
-		// AddSensor(Client, 0);
+		GetAllSensors(Client);
 		
 		return GetLocation(Client, CustomRequest);
 	}
@@ -63,7 +62,7 @@ bool DroneServer::Route(const FTCPClient &Client, std::shared_ptr<std::stringstr
 		Serialization::SerializeRequest(CustomRequest, *InputStream);
 
 		//testing new function
-		//RemoveSensor(Client, 1);
+		RemoveSensor(Client, 1);
 	
 		return GetRotation(Client, CustomRequest);
 	}
@@ -74,7 +73,7 @@ bool DroneServer::Route(const FTCPClient &Client, std::shared_ptr<std::stringstr
 		Serialization::SerializeRequest(CustomRequest, *InputStream);
 
 		//testing new function
-		//AddSensor(Client, 5);
+		AddSensor(Client, 5);
 		
 		return SetRotation(Client, CustomRequest);
 	}

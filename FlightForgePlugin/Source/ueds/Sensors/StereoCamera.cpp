@@ -8,11 +8,11 @@ UStereoCamera::UStereoCamera() : UCamera()
 	SensorType = SensorType::STEREO_CAMERA;
 	Name = TEXT("STEREO_CAMERA");
 
-	SceneCaptureMeshHolderStereoRight = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SceneCaptureMeshHolderStereoRight"));
-	SceneCaptureMeshHolderStereoRight->SetupAttachment(this);
+	//SceneCaptureMeshHolderStereoRight = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SceneCaptureMeshHolderStereoRight"));
+	//SceneCaptureMeshHolderStereoRight->SetupAttachment(this);
 
-	SceneCaptureComponent2DStereoRight = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2DStereoRight"));
-	SceneCaptureComponent2DStereoRight->SetupAttachment(SceneCaptureMeshHolderStereoRight);
+	//SceneCaptureComponent2DStereoRight = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2DStereoRight"));
+	//SceneCaptureComponent2DStereoRight->SetupAttachment(SceneCaptureMeshHolderStereoRight);
 
 	InstructionQueue = std::make_unique<TQueue<std::shared_ptr<FInstruction<UStereoCamera>>>>();
 }
@@ -29,6 +29,8 @@ void UStereoCamera::BeginPlay()
 	
 	RenderTarget2DStereoRight = NewObject<UTextureRenderTarget2D>();
 	RenderTarget2DStereoRight->InitCustomFormat(640, 480, PF_B8G8R8A8, false);
+	//RenderTarget2DStereoRight->InitAutoFormat(640, 480);
+
 	RenderTarget2DStereoRight->RenderTargetFormat = RTF_RGBA8;
 	RenderTarget2DStereoRight->bGPUSharedFlag     = true;
 
@@ -59,20 +61,6 @@ void UStereoCamera::BeginPlay()
 	
 	SetStereoCameraConfig(stereo_camera_config_);
 	SetCameraCaptureMode(Owner->GetCameraCaptureMode());
-}
-
-void UStereoCamera::Initialize(int InSensorID)
-{
-	Super::Initialize(InSensorID);
-	
-	SceneCaptureMeshHolderStereoRight->SetMobility(EComponentMobility::Movable);
-	if (!SceneCaptureMeshHolderStereoRight->IsRegistered()) 
-		SceneCaptureMeshHolderStereoRight->RegisterComponent();
-	
-	
-	SceneCaptureComponent2DStereoRight->SetMobility(EComponentMobility::Movable);
-	if (!SceneCaptureComponent2DStereoRight->IsRegistered())
-		SceneCaptureComponent2DStereoRight->RegisterComponent();
 }
 
 
@@ -359,6 +347,16 @@ void UStereoCamera::GetData(std::stringstream& OutputStream)
 	Response.stamp_ = stamp;
 
 	Serialization::DeserializeResponse(Response, OutputStream);
+}
+
+void UStereoCamera::Initialize(int InSensorID) {
+	Super::Initialize(InSensorID);
+	SceneCaptureMeshHolderStereoRight = NewObject<UStaticMeshComponent>(this, TEXT("SceneCaptureMeshHolderStereoRight"));
+	SceneCaptureMeshHolderStereoRight->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+
+	SceneCaptureComponent2DStereoRight = NewObject<USceneCaptureComponent2D>(this, TEXT("SceneCaptureComponent2DStereoRight"));
+	//SceneCaptureComponent2D = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2D"));
+	SceneCaptureComponent2DStereoRight->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 

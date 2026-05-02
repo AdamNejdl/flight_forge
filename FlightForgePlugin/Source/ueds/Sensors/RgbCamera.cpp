@@ -19,6 +19,7 @@ void URgbCamera::BeginPlay()
 
 	RenderTarget2D = NewObject<UTextureRenderTarget2D>();
 	RenderTarget2D->InitCustomFormat(640, 480, PF_B8G8R8A8, false);
+	//RenderTarget2D->InitAutoFormat(640, 480);
 	RenderTarget2D->RenderTargetFormat = RTF_RGBA8;
 	RenderTarget2D->bGPUSharedFlag     = true;
 

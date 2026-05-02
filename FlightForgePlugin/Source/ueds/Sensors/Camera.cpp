@@ -15,11 +15,7 @@ UCamera::UCamera()
 	CameraBufferCriticalSection = std::make_unique<FPThreadsCriticalSection>();
 #endif
 
-	SceneCaptureMeshHolder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SceneCaptureMeshHolder"));
-	SceneCaptureMeshHolder->SetupAttachment(this);
 
-	SceneCaptureComponent2D = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2D"));
-	SceneCaptureComponent2D->SetupAttachment(SceneCaptureMeshHolder);
 }
 
 
@@ -33,21 +29,6 @@ void UCamera::BeginPlay()
 	// TODO check https://github.com/TimmHess/UnrealImageCapture
 }
 
-void UCamera::Initialize(int InSensorID)
-{
-	Super::Initialize(InSensorID);
-	
-	
-	SceneCaptureMeshHolder->SetMobility(EComponentMobility::Movable);
-	if (!SceneCaptureMeshHolder->IsRegistered()) 
-		SceneCaptureMeshHolder->RegisterComponent();
-	
-	
-	SceneCaptureComponent2D->SetMobility(EComponentMobility::Movable);
-	if (!SceneCaptureComponent2D->IsRegistered())
-		SceneCaptureComponent2D->RegisterComponent();
-}
-
 void UCamera::BeginDestroy()
 {
 	// Cleanup buffer when component is destroyed
@@ -59,6 +40,21 @@ void UCamera::BeginDestroy()
 void UCamera::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+
+void UCamera::Initialize(int InSensorID) {
+	Super::Initialize(InSensorID);
+
+	//SceneCaptureMeshHolder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SceneCaptureMeshHolder"));
+	SceneCaptureMeshHolder = NewObject<UStaticMeshComponent>(this, TEXT("SceneCaptureMeshHolder"));
+	SceneCaptureMeshHolder->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+
+	SceneCaptureComponent2D = NewObject<USceneCaptureComponent2D>(this, TEXT("SceneCaptureComponent2D"));
+	//SceneCaptureComponent2D = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent2D"));
+	SceneCaptureComponent2D->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+
+
 }
 
 

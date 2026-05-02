@@ -71,8 +71,9 @@ public:
 	virtual void SetConfig(std::stringstream& OutputStream, std::shared_ptr<std::stringstream> InputStream) override;
 	virtual void GetData(std::stringstream& OutputStream) override;
 
-	
+	virtual void Initialize(int InSensorID) override;
+
 protected:
 	virtual void BeginPlay() override;
-	virtual void Initialize(int InSensorID) override;
+
 };
